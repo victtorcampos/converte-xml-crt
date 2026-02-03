@@ -109,8 +109,8 @@
           echo "╔═══════════════════════════════════════════════════════╗"
           echo "║  🚀 Converte XML CRT - Ambiente FastAPI Pronto!       ║"
           echo "║  Project: converte-xml-crt                             ║"
-          echo "║  Python: $(python --version)                          ║"
-          echo "║  FastAPI: Acesse http://localhost:$PORT/docs          ║"
+          echo "║  Python: $(python --version)                               ║"
+          echo "║  FastAPI: Acesse http://localhost:$PORT/docs               ║"
           echo "╚═══════════════════════════════════════════════════════╝"
           echo ""
         '';
