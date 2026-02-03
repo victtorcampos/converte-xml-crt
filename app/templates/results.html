@@ -1,0 +1,22 @@
+{# Template para exibir os resultados da conversão. Usado pelo HTMX. #}
+
+<div class="space-y-4">
+    {% for result in results %}
+    <div class="p-4 rounded-md border {% if result.error %}border-red-200 bg-red-50{% else %}border-green-200 bg-green-50{% endif %}">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="font-semibold text-gray-700">{{ result.filename }}</p>
+                <p class="text-sm {% if result.error %}text-red-600{% else %}text-green-600{% endif %}">{{ result.status }}</p>
+                {% if result.error %}
+                <p class="text-xs text-red-500 mt-1"><strong>Motivo:</strong> {{ result.error }}</p>
+                {% endif %}
+            </div>
+            {% if result.download_link %}
+            <a href="{{ result.download_link }}" 
+               class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+               download>Download</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

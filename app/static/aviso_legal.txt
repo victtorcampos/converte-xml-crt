@@ -1,0 +1,13 @@
+AVISO LEGAL
+
+Este software foi desenvolvido para auxiliar na conversão de arquivos XML de NFe/NFCe do regime Simples Nacional para o Regime de Apuração Normal.
+
+1.  **Responsabilidade:** O uso deste software é de inteira responsabilidade do usuário. Recomenda-se que todos os arquivos convertidos sejam cuidadosamente revisados por um profissional de contabilidade antes de serem utilizados para fins fiscais ou legais.
+
+2.  **Precisão:** Embora tenham sido feitos todos os esforços para garantir a precisão das conversões, os desenvolvedores não se responsabilizam por quaisquer erros, omissões ou inconsistências geradas pelo software, nem por quaisquer perdas ou danos decorrentes de seu uso.
+
+3.  **Validação:** A conversão segue as regras técnicas e de negócio especificadas, mas não substitui a validação final por parte do emissor ou do responsável fiscal. As regulamentações fiscais podem variar e sofrer alterações.
+
+4.  **Uso:** Este software é uma ferramenta de apoio e não deve ser considerado como consultoria fiscal ou contábil.
+
+Ao utilizar este software, você concorda com estes termos.
