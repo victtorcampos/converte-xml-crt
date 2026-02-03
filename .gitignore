@@ -97,7 +97,7 @@ venv.bak/
 # IDE-specific
 .idea/
 .vscode/
-.idx/
+#.idx/
 
 # Temp files
 *.swp
