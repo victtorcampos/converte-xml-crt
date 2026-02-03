@@ -80,8 +80,8 @@ class XMLConverter:
 
         conversion_map = {
             '101': self._create_cst_00,
-            '102': self._create_cst_41,
-            '103': self._create_cst_41,
+            '102': self._create_cst_00,
+            '103': self._create_cst_00,
             '300': self._create_cst_41,
             '400': self._create_cst_41,
             '201': self._create_cst_10,
