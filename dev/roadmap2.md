@@ -30,21 +30,19 @@ Itens solicitados:
 
 ## 4) Roteiro (passo a passo)
 
-### 4.1 Backend — Configuração CRT
-1. Criar/atualizar modelo de configuração (Pydantic) com campo `target_crt: Literal[1,2,3]`.
-2. Expor essa opção no endpoint de conversão (form field ou JSON, dependendo do fluxo atual).
-3. Validar: se `target_crt` ausente → default (defina explicitamente; sugestão: 3).
+### 4.1 Criar/Atualizar `roadmap2.md` (esta tarefa)
+- [X] Criar o arquivo `dev/roadmap2.md`.
+- [X] Colar o conteúdo fornecido.
+- [ ] Revisar se não falta nada do escopo.
 
-### 4.2 Backend — Leitura CRT atual do XML
-1. Implementar função `get_current_crt(xml_root) -> int | None`:
-   - XPath: `//nfe:infNFe/nfe:emit/nfe:CRT`.
-2. Se não encontrado → marcar arquivo como ERRO (não tentar inferir).
+### 4.2 Análise do código existente
+1. Ler `app/core/conversion.py` para entender onde a lógica de conversão se encaixa.
+2. Ler `app/main.py` para ver como a função de conversão é chamada.
+3. Ler `app/templates/index.html` para identificar onde adicionar a UI de seleção do CRT.
 
-### 4.3 Regra de “ignorar”
-1. Se `target_crt == 1` e `current_crt == 1`:
-   - Não remover `protNFe` e não mexer em `Signature` (porque você não está convertendo).
-   - Registrar no log: `IGNORADO (já CRT=1)`.
-   - Gravar XML original no ZIP em `/ignorados/` (ou manter fora do ZIP; escolha e documente).
+### 4.3 UI - Adicionar seleção de CRT
+1. Em `index.html`, adicionar um `<select>` com as opções de CRT (1, 2, 3).
+2. Garantir que o valor selecionado (`target_crt`) seja enviado no formulário.
 
 ### 4.4 Atualizar CRT no XML
 1. Se arquivo não for ignorado:
@@ -67,19 +65,14 @@ Itens solicitados:
 2. Log deve incluir:
    - CRT original, CRT destino, Signature removida? protNFe removido?
 
-### 4.7 Testes (mínimo)
-1. Fixture com XML `nfeProc` contendo `NFe` + `protNFe` + `Signature`.
-2. Testar:
-   - Quando converter (target_crt=3): `protNFe` removido, `Signature` removida, CRT alterado.
-   - Quando ignorar (target_crt=1 e current_crt=1): XML byte-a-byte igual ao original.
+### 4.7 Checklist de Implementação (para atualizar no final)
 
-## 5) Checklist (para preencher durante o desenvolvimento)
+#### Infraestrutura e setup
+- [X] Criado `dev/roadmap2.md`.
+- [ ] Adicionado `lxml` em `requirements.txt`.
+- [ ] Garantir que o ambiente virtual está com as dependências em dia.
 
-### Preparação
-- [ ] Confirmar o fluxo atual da UI (“2. Configurações”) e onde adicionar o seletor CRT.
-- [ ] Confirmar o contrato do endpoint (multipart? JSON?) e como receber `target_crt`.
-
-### Implementação
+#### Implementação
 - [ ] Adicionar `target_crt` no modelo/configuração.
 - [ ] Implementar leitura do CRT atual do XML.
 - [ ] Implementar regra de ignorar (CRT=1 e XML CRT=1).
@@ -88,16 +81,16 @@ Itens solicitados:
 - [ ] Implementar remoção de `Signature`.
 - [ ] Ajustar criação/alteração de tags para preservar namespace.
 
-### Saída e observabilidade
+#### Saída e observabilidade
 - [ ] Atualizar ZIP para separar `convertidos/` e `ignorados/` (ou documentar comportamento).
 - [ ] Gerar `log.txt` com OK/IGNORADO/ERRO.
 
-### Testes
+#### Testes
 - [ ] Criar fixtures de XML com `protNFe` e `Signature`.
 - [ ] Teste unitário: conversão remove `protNFe` e `Signature`.
 - [ ] Teste unitário: regra IGNORAR preserva XML.
 - [ ] Teste de regressão: conversão em lote não quebra para múltiplos arquivos.
 
-### Finalização
+#### Finalização
 - [ ] Atualizar README: opção CRT, regra de ignorar, e o que é removido do XML.
 - [ ] Versionar (tag) a entrega desta etapa.

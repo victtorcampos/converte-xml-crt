@@ -1,129 +1,95 @@
-# Conversor de NFe/NFCe - Simples Nacional para Regime Normal
+# Conversor de Regime Tributário para NFe/NFCe
 
-Esta é uma ferramenta para converter arquivos XML de Nota Fiscal Eletrônica (NFe) e Nota Fiscal de Consumidor Eletrônica (NFCe) do regime de tributação Simples Nacional para o Regime de Apuração Normal.
+Esta é uma ferramenta web para manipular arquivos XML de Nota Fiscal Eletrônica (NFe) e Nota Fiscal de Consumidor Eletrônica (NFCe), focada na alteração do regime de tributação (CRT) e na limpeza de informações de autorização para reprocessamento.
 
-A aplicação altera o CRT (Código de Regime Tributário) do emitente, converte os códigos CSOSN para os códigos CST correspondentes e recalcula os impostos (ICMS) com base em uma alíquota informada pelo usuário.
+### Funcionalidades Principais
 
-## Ambiente de Desenvolvimento no Windows
+*   **Alteração de CRT:** Converte o regime tributário do emitente para Simples Nacional (1), Simples Nacional - excesso de sublimite (2) ou Regime Normal (3).
+*   **Conversão de Tributação:** Ao migrar de Simples Nacional (CRT 1) para outros regimes, a ferramenta converte automaticamente os códigos CSOSN para os códigos CST equivalentes e recalcula o ICMS com base em uma alíquota configurável.
+*   **Limpeza de XML:** Remove as seções `<protNFe>` e `<Signature>` do XML, permitindo que o documento seja revalidado ou transmitido a outros sistemas como uma nota "fria".
+*   **Relatórios Detalhados:** Gera um `relatorio.txt` para cada lote de arquivos processados, informando o status de cada um (convertido, ignorado ou erro) e as alterações realizadas.
 
-Para uma melhor experiência de desenvolvimento no Windows, recomendamos o uso do **PowerShell 7.5** e do **Windows Terminal**.
-
-### Instalando o PowerShell 7.5
-
-1.  **Via Microsoft Store:**
-    *   Abra a Microsoft Store no Windows 11.
-    *   Procure por "PowerShell" e instale a versão mais recente.
-
-2.  **Via Winget (no Terminal):**
-    *   Abra o Windows Terminal (pode ser com o PowerShell 5 que vem com o Windows).
-    *   Execute o comando:
-        ```powershell
-        winget install --id Microsoft.PowerShell --source winget
-        ```
-
-### Como Instalar o Python e Configurar no Windows 11
-
-1.  **Baixe o Python:**
-    *   Acesse o site oficial do Python em [python.org](https://www.python.org/downloads/).
-    *   Clique no botão "Download Python" para baixar a versão mais recente.
-
-2.  **Execute o Instalador:**
-    *   Abra o arquivo que você baixou.
-    *   **Importante:** Na primeira tela do instalador, marque a caixa que diz **"Add Python to PATH"**. Isso facilitará a execução de comandos Python no terminal.
-    *   Clique em "Install Now".
-
-3.  **Verifique a Instalação:**
-    *   Abra o **PowerShell 7**.
-    *   Digite os seguintes comandos para verificar se o Python e o pip (gerenciador de pacotes) foram instalados corretamente:
-        ```powershell
-        python --version
-        pip --version
-        ```
+---
 
 ## Como Executar a Aplicação
 
-As instruções variam um pouco dependendo do seu sistema operacional.
-
-### Para Linux e macOS (usando Bash)
+A aplicação foi desenvolvida para ser executada em um ambiente com Python e um terminal (Bash para Linux/macOS ou PowerShell para Windows).
 
 1.  **Ative o Ambiente Virtual:**
-    ```sh
-    source .venv/bin/activate
-    ```
+    *   **Linux/macOS:**
+        ```sh
+        source .venv/bin/activate
+        ```
+    *   **Windows (PowerShell):**
+        ```powershell
+        # Se for a primeira vez, talvez seja necessário permitir scripts:
+        # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+        . .venv/Scripts/Activate.ps1
+        ```
 
-2.  **Inicie o Servidor de Desenvolvimento:**
-    ```sh
-    ./devserver.sh
-    ```
+2.  **Inicie o Servidor:**
+    *   **Linux/macOS:**
+        ```sh
+        ./devserver.sh
+        ```
+    *   **Windows (PowerShell):**
+        ```powershell
+        ./devserver.ps1
+        ```
 
-### Para Windows (usando PowerShell)
+3.  **Acesse a Interface:**
+    Após iniciar o servidor, sua IDE deve notificá-lo para abrir a aplicação em uma aba de preview. Clique na notificação para acessar a interface web.
 
-1.  **Ative o Ambiente Virtual:**
-    Primeiro, talvez seja necessário permitir a execução de scripts no seu sistema. Execute o PowerShell como Administrador e rode:
-    ```powershell
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-    ```
-    Depois, em um terminal normal, ative o ambiente:
-    ```powershell
-    . .venv/Scripts/Activate.ps1
-    ```
-
-2.  **Inicie o Servidor de Desenvolvimento:**
-    ```powershell
-    ./devserver.ps1
-    ```
-
-### Acesse a Aplicação
-
-Após iniciar o servidor, a IDE mostrará uma notificação para você abrir a aplicação em uma aba de preview. Clique nela para acessar a interface web.
+---
 
 ## Como Usar a Ferramenta
 
-A interface web é simples e direta:
+1.  **Upload:** Arraste e solte ou selecione os arquivos XML que deseja processar.
+2.  **Configuração:**
+    *   **CRT de Destino:** Escolha o regime tributário para o qual deseja converter os arquivos.
+    *   **Alíquota ICMS (%):** Obrigatória apenas ao converter do CRT 1 para os regimes 2 ou 3.
+    *   **Conversão CSOSN 900:** Defina o CST correspondente para o CSOSN 900 (geralmente '41' ou '90').
+3.  **Conversão:** Clique em "Converter Arquivos".
+4.  **Download:** Um link de download para um arquivo ZIP aparecerá. Este arquivo contém:
+    *   `convertidos/`: Pasta com os XMLs que foram modificados.
+    *   `ignorados/`: Pasta com os XMLs que não necessitaram de alteração (ex: converter para CRT 1 um arquivo que já era CRT 1).
+    *   `relatorio.txt`: Um relatório detalhado da ação tomada em cada arquivo, incluindo CRT original, CRT de destino e se a assinatura e o protocolo foram removidos.
+    *   `aviso_legal.txt`: Os termos de uso da ferramenta.
 
-1.  **Acesse a Página:** Abra a aplicação no seu navegador.
-2.  **Selecione os Arquivos:** Clique no botão "Escolher arquivos" ou arraste e solte os arquivos XML.
-3.  **Defina a Alíquota de ICMS:** Insira o percentual de ICMS a ser usado.
-4.  **Inicie a Conversão:** Clique em "Converter".
-5.  **Baixe o Resultado:** Clique em "Download do ZIP" para baixar os arquivos convertidos.
+---
+
+## Como Testar
+
+O projeto utiliza `pytest` para testes unitários e de funcionalidades. Para executar os testes:
+
+1.  **Ative o Ambiente Virtual** (instruções acima).
+2.  **Rode o Pytest:**
+    ```sh
+    # É importante definir o PYTHONPATH para que os módulos da aplicação sejam encontrados
+    PYTHONPATH=. pytest
+    ```
+
+---
 
 ## Comandos Úteis
 
-### Para Linux e macOS (usando Bash)
-
-*   **Ativar o ambiente virtual:**
-    ```sh
-    source .venv/bin/activate
-    ```
-*   **Instalar/Atualizar as dependências:**
+*   **Instalar/Atualizar Dependências:**
     ```sh
     pip install -r requirements.txt
     ```
-*   **Salvar novas dependências:**
+*   **Salvar Novas Dependências:**
+    Após instalar um novo pacote com `pip install`, atualize o `requirements.txt`:
     ```sh
     pip freeze > requirements.txt
     ```
 
-### Para Windows (usando PowerShell)
-
-*   **Ativar o ambiente virtual:**
-    ```powershell
-    . .venv/Scripts/Activate.ps1
-    ```
-*   **Instalar/Atualizar as dependências:**
-    ```powershell
-    pip install -r requirements.txt
-    ```
-*   **Salvar novas dependências:**
-    ```powershell
-    pip freeze > requirements.txt
-    ```
+---
 
 ## Aviso Legal
 
 **É fundamental que você leia e compreenda os seguintes termos antes de usar a ferramenta:**
 
-Este software foi desenvolvido para auxiliar na conversão de arquivos XML de NFe/NFCe do regime Simples Nacional para o Regime de Apuração Normal.
+Este software foi desenvolvido para auxiliar na manipulação de arquivos XML de NFe/NFCe.
 
 1.  **Responsabilidade:** O uso deste software é de inteira responsabilidade do usuário. Recomenda-se que todos os arquivos convertidos sejam cuidadosamente revisados por um profissional de contabilidade antes de serem utilizados para fins fiscais ou legais.
 
